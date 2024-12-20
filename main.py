@@ -1,10 +1,7 @@
 from peewee import *
 
-# Veritabanı bağlantısı
 db = SqliteDatabase('restoran_siparis_yonetimi.db')
 
-
-# Modeller (Tablolar)
 class BaseModel(Model):
     class Meta:
         database = db
@@ -25,19 +22,14 @@ class SiparisDetay(BaseModel):
     urun = ForeignKeyField(Urun, backref='siparisler')
     miktar = IntegerField()
 
-
-# Veritabanını oluştur
 db.connect()
 db.create_tables([Urun, Siparis, SiparisDetay])
 
-
-# Ürün ekleme fonksiyonu
 def urun_ekle(isim, fiyat):
     urun = Urun.create(isim=isim, fiyat=fiyat)
     print(f"Ürün eklendi: {isim}, {fiyat} TL")
 
 
-# Sipariş oluşturma fonksiyonu
 def siparis_olustur():
     toplam_tutar = 0
     siparis_urunler = []
@@ -68,7 +60,6 @@ def siparis_olustur():
         print("Sipariş oluşturulamadı. Lütfen geçerli ürünler ekleyin.")
 
 
-# Sipariş detaylarını listeleme fonksiyonu
 def siparis_detaylari_goster():
     for siparis in Siparis.select():
         print(f"Sipariş ID: {siparis.id}, Tarih: {siparis.tarih}, Toplam Tutar: {siparis.toplam_tutar} TL")
@@ -76,13 +67,11 @@ def siparis_detaylari_goster():
             print(f"  Ürün: {detay.urun.isim}, Miktar: {detay.miktar}, Fiyat: {detay.urun.fiyat} TL")
 
 
-# Ürün listeleme fonksiyonu
 def urunleri_listele():
     for urun in Urun.select():
         print(f"ID: {urun.id}, İsim: {urun.isim}, Fiyat: {urun.fiyat} TL")
 
 
-# Ana program
 if __name__ == "__main__":
     while True:
         print("\n1. Ürün Ekle")
@@ -109,5 +98,4 @@ if __name__ == "__main__":
         else:
             print("Geçersiz seçim. Tekrar deneyin.")
 
-    # Bağlantıyı kapat
     db.close()
